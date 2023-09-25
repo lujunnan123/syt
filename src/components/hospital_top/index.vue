@@ -3,7 +3,7 @@
         <div class="content">
             <div class="left">
                 <div class="logo">
-                    <img src="../../assets/logo.png" alt="">
+                    <img src="../../assets/images/logo.png" alt="">
                 </div>
                 <div class="title">尚医通 </div>
                 <div class="pertitle">预约挂号统一平台</div>
