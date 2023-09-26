@@ -6,9 +6,18 @@ import path from 'path'
 export default defineConfig({
   plugins: [vue()],
   // src文件夹配置别名
-  resolve:{
-    alias:{
-      "@":path.resolve(__dirname,'src')
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, 'src')
+    }
+  },
+  // 代理跨域
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://syt.atguigu.cn',
+        changeOrigin: true,
+      }
     }
   }
 })
