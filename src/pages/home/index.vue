@@ -10,7 +10,7 @@
                 <Level />
                 <Region />
                 <div class="hospital">
-                    <Card class="item" v-for="item in 8" :key="item" />                   
+                    <Card class="item" v-for="(item,index) in hasHospotalArr" :key="index" :hospitalInfo="item" />                   
                 </div>
                 <div class="pagination">
                      <!-- 分页器 -->
@@ -20,8 +20,8 @@
                         :page-sizes="[10, 20, 30, 40]" 
                         :background="true" 
                         layout="total,sizes, prev, pager, next,->,jumper" 
-                        :total="400"
-                        @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+                        :total="total"
+                        @size-change="sizeChange" @current-change="currentChange" />
                 </div>
             </el-col>
             <el-col :span="4">123</el-col>
@@ -29,6 +29,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import {reqHospital} from '@/api/home'
 // 引入首页轮播图组件
 import Carousel from './carousel/index.vue'
 import Search from './search/index.vue'
@@ -36,11 +37,36 @@ import Level from './level/index.vue'
 import Region from './region/index.vue'
 import Card from './card/index.vue'
 // 分页器需要的数据
-import {ref} from 'vue'
+import {ref,onMounted} from 'vue'
 // 分页器页码
 let pageNo = ref<number>(1)
 // 一页展示多少条数据
 let pageSize = ref<number>(10)
+let hasHospotalArr = ref([])
+let total = ref(0)
+//组件挂载完成，发一次请求
+onMounted(() => {
+    getHospitalInfo();
+});
+// 获取已有的医院数据
+const getHospitalInfo = async ()=>{
+    let result:any = await reqHospital(pageNo.value,pageSize.value)
+    if(result.code==200){
+       // 存储已有的医院数据 
+        hasHospotalArr.value = result.data.content
+        
+        //存储医院总个数
+        total.value = result.data.totalElements
+    }
+}
+// 分页器页码发生改变时候回调
+const currentChange =()=>{
+    getHospitalInfo()
+}
+// 分页器下拉菜单发生变化时候回调
+const sizeChange = ()=>{
+    getHospitalInfo()
+}
 </script>
 <style scoped lang="scss">
 .hospital {
