@@ -71,3 +71,23 @@ export interface HospitalResponseData extends ResponseData {
 
         },
 }
+
+
+// 代表医院等级或者地区数据ts类型
+export interface HospitalLevelAndregion{
+    "createTime": string,
+    "dictCode": string,
+    "hasChildren": false,
+    "id": number,
+    "isDeleted":number,
+    "name": string,
+    "param": {},
+    "parentId": number,
+    "updateTime": string,
+    "value": string
+}
+export type HospitalLevelAndregionArr = HospitalLevelAndregion[];
+// 获取等级或医院地区接口返回数据类型
+export interface HospitalLevelAndregionResponseData extends ResponseData{
+    data:HospitalLevelAndregionArr
+}
