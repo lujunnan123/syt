@@ -34,8 +34,10 @@
     }
     // 点击标签，将该标签特征存入activeFlg
     const changeLevel = (level:string)=>{
-        activeFlg.value = level
+        activeFlg.value = level;
+        $emit('getLevel',level)
     }
+    let $emit = defineEmits(["getLevel"])
 
 </script>
 <script lang="ts">

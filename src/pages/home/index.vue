@@ -7,11 +7,14 @@
         <!-- 列表组件 Layout布局 -->
         <el-row>
             <el-col :span="18">
-                <Level />
-                <Region />
-                <div class="hospital">
+                <Level @getLevel="getLevel" />
+                <Region @getRegion="getRegion" />
+                <!-- 展示医院数据 -->
+                <div class="hospital" v-if="hasHospotalArr.length>0" >
                     <Card class="item" v-for="(item,index) in hasHospotalArr" :key="index" :hospitalInfo="item" />                   
-                </div>
+                </div>                
+                <el-empty v-else description="暂无数据" />
+                {{ hasHospotalArr.length }}
                 <div class="pagination">
                      <!-- 分页器 -->
                      <el-pagination 
@@ -45,13 +48,20 @@ let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
 let hasHospotalArr = ref<Content>([])
 let total = ref(0)
+// 存储医院的等级相应数据
+let hostype = ref<string>('')
+// 存储医院的地区相应数据
+let districtCode = ref<string>('')
+
+
+
 //组件挂载完成，发一次请求
 onMounted(() => {
     getHospitalInfo();
 });
 // 获取已有的医院数据
 const getHospitalInfo = async ()=>{
-    let result:HospitalResponseData = await reqHospital(pageNo.value,pageSize.value)
+    let result:HospitalResponseData = await reqHospital(pageNo.value,pageSize.value,hostype.value,districtCode.value);
     if(result.code==200){
        // 存储已有的医院数据 
         hasHospotalArr.value = result.data.content
@@ -67,6 +77,20 @@ const currentChange =()=>{
 // 分页器下拉菜单发生变化时候回调
 const sizeChange = ()=>{
     getHospitalInfo()
+}
+
+// 子组件自定义事件：获取儿子给父亲组件传递过来的等级参数
+const getLevel = (level:string)=>{
+    // 收集参数
+    hostype.value=level
+    // 重新发送请求
+    getHospitalInfo();    
+}
+const getRegion = (region:string)=>{
+    // 收集参数
+    districtCode.value=region
+    // 重新发送请求
+    getHospitalInfo();
 }
 </script>
 <style scoped lang="scss">

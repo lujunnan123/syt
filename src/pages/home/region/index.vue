@@ -24,6 +24,7 @@ let regionFlg = ref<string>('')
 onMounted(() => {
     getRegionData()
 });
+// 请求地区数据
 const getRegionData = async()=>{
     let result:HospitalLevelAndregionResponseData = await reqHospitalLevelAndregion('beijin')
     // console.log(result);
@@ -31,10 +32,13 @@ const getRegionData = async()=>{
         regionData.value = result.data
     }    
 }
+// 点击标签
 const changeRegion = (region:string)=>{
     regionFlg.value = region
+    $emit("getRegion",regionFlg.value)
 }
 
+let $emit = defineEmits(['getRegion'])
 </script>
 <script lang="ts">
     export default {
