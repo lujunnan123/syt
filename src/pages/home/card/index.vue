@@ -27,7 +27,7 @@ let $router = useRouter();
 // 接受父组件传入的参数 已有医院数据
 defineProps(['hospitalInfo'])
 const goDetail = ()=>{
-  $router.push({path:"/hospital"})
+  $router.push({path:"/hospital/register"})
 }
 </script>
 
