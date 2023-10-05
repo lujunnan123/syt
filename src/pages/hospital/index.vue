@@ -9,7 +9,8 @@
                     <el-breadcrumb-item>promotion</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-            <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
+            <div class="main_menu">
+                <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
                 <el-menu-item index="/hospital/register" @click="changeActive('/hospital/register')">
                     <el-icon>
                         <Calendar />
@@ -39,6 +40,8 @@
                     <span>查询/取消</span>
                 </el-menu-item>
             </el-menu>
+            </div>
+           
         </div>
         <!-- 右侧内容展示区域 -->
         <div class="content">
@@ -57,6 +60,11 @@ import {
     Search
 } from '@element-plus/icons-vue'
 import { useRouter,useRoute } from 'vue-router';
+import { onMounted } from 'vue';
+import useDetailStore from '@/store/modules/hospitalDetail'
+// 获取仓库对象
+let detailStore = useDetailStore()
+// 获取路由器
 let $router = useRouter(); 
 // 获取当前路由信息
 let $route = useRoute();
@@ -67,20 +75,30 @@ const changeActive = (path:string)=>{
     })
 }
 
+// 组件挂载完毕：通知pinia仓库发请求，获取医院详细数据，存储在仓库中
+onMounted(() => {
+    detailStore.getHospital($route.query.hoscode)
+})
 
 </script>
 
 <style scoped lang="scss">
 .hospital {
     display: flex;
-
+    padding: 15px 0;
+    color: #7f7f7f;
+    min-height: 700px;
     .menu {
         flex: 2;
         display: flex;
         flex-direction: column;
+        min-height: 700px;
         .top{
             padding-top: 10px;
             color: #7f7f7f;
+        }
+        .main_menu{
+            width: 200px;
         }
     }
 

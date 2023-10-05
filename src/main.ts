@@ -13,12 +13,16 @@ import router from '@/router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 // 引入ElementPlus国际化文件
-//@ts-ignore
+    //@ts-ignore
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+// 引入pinia仓库
+import pinia from '@/store'
 // 利用createApp方法创建应用实例，且将应用实例挂载到挂载点上
 const app = createApp(App)
 app.component('HospitalTop',HospitalTop)
 app.component('HospitalBottom',HospitalBottom)
 app.use(router)
+// 安装pinia仓库
+app.use(pinia)
 app.use(ElementPlus,{locale: zhCn})
 app.mount('#app')

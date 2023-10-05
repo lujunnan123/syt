@@ -22,13 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-let $router = useRouter();
-// 接受父组件传入的参数 已有医院数据
-defineProps(['hospitalInfo'])
-const goDetail = ()=>{
-  $router.push({path:"/hospital/register"})
-}
+  import { useRouter } from 'vue-router';
+  let $router = useRouter();
+  // 接受父组件传入的参数 已有医院数据
+  let props = defineProps(['hospitalInfo'])
+  const goDetail = ()=>{
+    $router.push({path:"/hospital/register",query:{hoscode:props.hospitalInfo.hoscode}})
+  }
 </script>
 
 <style scoped lang="scss">

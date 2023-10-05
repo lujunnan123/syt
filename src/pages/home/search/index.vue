@@ -36,8 +36,10 @@ const fetchData = async(keyword:string,cb:any)=>{
 }
 // 点击某个建议项
 const goDetail = (item:any)=>{
-    // 点击建议项，跳转至医院详情页面    
-    $router.push({path:'/hospital/detail'})
+    // 点击建议项，跳转至医院详情页面   
+    
+    
+    $router.push({path:'/hospital/register',query:{hoscode:item.hoscode}})
 }
 </script>
 <script lang="ts">
