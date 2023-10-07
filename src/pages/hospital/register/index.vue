@@ -31,14 +31,42 @@
                 <div class="rule" v-for="item in hospitalStore.hospitalInfo.bookingRule?.rule">{{ item }}</div>
             </div>
         </div>
+        <div class="department">
+            <div class="leftNav">
+                <ul>
+                    <li :class="{active:index==currentIndex}" @click="changeIndex(index)" v-for="(department,index) in hospitalStore.departmentArr" :key="department.depcode">{{ department.depname }}</li>
+                </ul>
+            </div>
+            <div class="deparmentInfo">
+                <div class="showDepartment" v-for="department in hospitalStore.departmentArr" :key="department.depcode">
+                    <h1 class="cur">{{department.depname}}</h1>
+                    <!-- 每一个大的科室下的小科室 -->
+                    <ul>
+                        <li  v-for="(item) in department.children" :key="item.depcode">
+                            {{ item.depname }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import useDetailStore from '@/store/modules/hospitalDetail'
+import { ref } from 'vue';
 let hospitalStore = useDetailStore()
-console.log(hospitalStore);
-
+// 控制科室高亮的响应式数据
+let currentIndex = ref<number>(0)
+// 左侧科室点击事件
+const changeIndex = (index:number)=>{
+    currentIndex.value = index;
+    let allH1 = document.querySelectorAll('.cur');
+    // 滚动到指定位置   
+    allH1[currentIndex.value].scrollIntoView({
+        behavior:"smooth"
+    })
+}
 </script>
 
 <style scoped lang="scss">
@@ -80,8 +108,65 @@ console.log(hospitalStore);
                     }
                 }
                 .time,.route,.returnTime,.address,.rule{
-                    // color: red;
+                    color: #7f7f7f;
                     margin-top: 10px;
+                }
+            }
+        }
+        .department{
+            margin-top: 20px;
+            display: flex;
+            width: 100%;
+            height: 500px;
+            .leftNav{
+                width: 80px;
+                height: 100%;
+                ul{
+                    width: 100%;
+                    height: 100%;
+                    background: rgb(248,248,248);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    li{
+                        flex: 1;
+                        text-align: center;
+                        font-size: 14px;
+                        color: #7f7f7f;
+                        line-height: 40px;
+                        &.active{
+                            background: #fff;
+                            border-left: 2px solid #6c2304;
+                            color: #6c2304;
+                        }
+                    }
+                }
+            }
+            .deparmentInfo{
+                height: 100%;
+                overflow: auto;
+                flex: 1;
+                margin-left: 20px;
+                &::-webkit-scrollbar{
+                    display: none;
+                }
+                .showDepartment{
+                    h1{
+                        margin: 5px 0;
+                        background: rgb(248,248,248);
+                        color: #7f7f7f;
+                    }
+                    ul{
+                        display: flex;
+                        flex-wrap: wrap;
+                        li{
+                            width: 33%;
+                            // line-height: 20px;
+                            padding: 10px;
+                            color: #7f7f7f;
+
+                        }
+                    }
                 }
             }
         }

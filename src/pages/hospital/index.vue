@@ -77,7 +77,10 @@ const changeActive = (path:string)=>{
 
 // 组件挂载完毕：通知pinia仓库发请求，获取医院详细数据，存储在仓库中
 onMounted(() => {
-    detailStore.getHospital($route.query.hoscode)
+    // 获取医院详情的数据
+    detailStore.getHospital($route.query.hoscode as string)
+    // 获取某一科室的数据
+    detailStore.getDepartment($route.query.hoscode as string)
 })
 
 </script>
@@ -86,7 +89,6 @@ onMounted(() => {
 .hospital {
     display: flex;
     padding: 15px 0;
-    color: #7f7f7f;
     min-height: 700px;
     .menu {
         flex: 2;
