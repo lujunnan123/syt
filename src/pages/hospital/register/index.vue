@@ -42,7 +42,7 @@
                     <h1 class="cur">{{department.depname}}</h1>
                     <!-- 每一个大的科室下的小科室 -->
                     <ul>
-                        <li  v-for="(item) in department.children" :key="item.depcode">
+                        <li @click="showdialog"  v-for="(item) in department.children" :key="item.depcode">
                             {{ item.depname }}
                         </li>
                     </ul>
@@ -54,8 +54,10 @@
 
 <script setup lang="ts">
 import useDetailStore from '@/store/modules/hospitalDetail'
+import useLoginStore from '@/store/modules/login';
 import { ref } from 'vue';
 let hospitalStore = useDetailStore()
+let LoginStore = useLoginStore()
 // 控制科室高亮的响应式数据
 let currentIndex = ref<number>(0)
 // 左侧科室点击事件
@@ -66,6 +68,10 @@ const changeIndex = (index:number)=>{
     allH1[currentIndex.value].scrollIntoView({
         behavior:"smooth"
     })
+}
+// 点击科室 显示对话框
+const showdialog = ()=>{    
+    LoginStore.visiable = true
 }
 </script>
 

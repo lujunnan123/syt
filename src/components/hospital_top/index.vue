@@ -10,7 +10,7 @@
             </div>
             <div class="right">
                 <div class="help">帮助中心</div>
-                <div class="sign">登录/注册</div>
+                <div class="sign" @click="login">登录/注册</div>
             </div>
         </div>
         
@@ -19,9 +19,14 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import useLoginStore from '@/store/modules/login';
+let LoginStore = useLoginStore()
 let $router = useRouter();
 const goHome = ()=>{
     $router.push({path:"/home"})
+}
+const login = ()=>{
+    LoginStore.visiable = true
 }
 </script>
 
