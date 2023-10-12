@@ -14,25 +14,30 @@ export default createRouter({
             component: () => import('@/pages/hospital/index.vue'),
             children: [
                 {
-                    path: '/hospital/close',
+                    path: 'close',
                     component: () => import('@/pages/hospital/close/index.vue'),
                 },
                 {
-                    path: '/hospital/detail',
+                    path: 'detail',
                     component: () => import('@/pages/hospital/detail/index.vue'),
                 },
                 {
-                    path: '/hospital/notice',
+                    path: 'notice',
                     component: () => import('@/pages/hospital/notice/index.vue'),
                 },
                 {
-                    path: '/hospital/register',
+                    path: 'register',
                     component: () => import('@/pages/hospital/register/index.vue'),
+                   
                 },
                 {
-                    path: '/hospital/search',
+                    path: 'search',
                     component: () => import('@/pages/hospital/search/index.vue'),
                 },
+                {
+                    path:'register_step1',
+                    component:() => import('@/pages/hospital/register/register_step1.vue')
+                }
             ]
         },
         // 路由重定向

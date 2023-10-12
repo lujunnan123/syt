@@ -42,7 +42,7 @@
                     <h1 class="cur">{{department.depname}}</h1>
                     <!-- 每一个大的科室下的小科室 -->
                     <ul>
-                        <li @click="showdialog"  v-for="(item) in department.children" :key="item.depcode">
+                        <li @click="showdialog(item)"  v-for="(item) in department.children" :key="item.depcode">
                             {{ item.depname }}
                         </li>
                     </ul>
@@ -54,10 +54,15 @@
 
 <script setup lang="ts">
 import useDetailStore from '@/store/modules/hospitalDetail'
-import useLoginStore from '@/store/modules/user';
+// import useLoginStore from '@/store/modules/user';
+import {useRouter,useRoute} from 'vue-router'
 import { ref } from 'vue';
 let hospitalStore = useDetailStore()
-let LoginStore = useLoginStore()
+// let LoginStore = useLoginStore()
+// 获取路由器
+let $router = useRouter()
+// 获取路由对象
+let $route = useRoute()
 // 控制科室高亮的响应式数据
 let currentIndex = ref<number>(0)
 // 左侧科室点击事件
@@ -70,8 +75,15 @@ const changeIndex = (index:number)=>{
     })
 }
 // 点击科室 显示对话框
-const showdialog = ()=>{    
-    LoginStore.visiable = true
+const showdialog = (item:any)=>{    
+    // 登录组件对话框展示
+    // LoginStore.visiable = true;
+    console.log(item);
+    // item 即为 用户选中的科室标识
+    $router.push({
+        path:'/hospital/register_step1',
+        query:{hoscode:$route.query.hoscode,depcode:item.depcode}
+    })
 }
 </script>
 
@@ -124,7 +136,8 @@ const showdialog = ()=>{
             display: flex;
             width: 100%;
             height: 500px;
-            .leftNav{
+            .leftNav{                
+                cursor: pointer;
                 width: 80px;
                 height: 100%;
                 ul{
@@ -148,7 +161,8 @@ const showdialog = ()=>{
                     }
                 }
             }
-            .deparmentInfo{
+            .deparmentInfo{ 
+                cursor: pointer;
                 height: 100%;
                 overflow: auto;
                 flex: 1;
@@ -177,4 +191,4 @@ const showdialog = ()=>{
             }
         }
     }
-</style>@/store/modules/user
+</style>
