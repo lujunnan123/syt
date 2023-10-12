@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import useDetailStore from '@/store/modules/hospitalDetail'
-import useLoginStore from '@/store/modules/login';
+import useLoginStore from '@/store/modules/user';
 import { ref } from 'vue';
 let hospitalStore = useDetailStore()
 let LoginStore = useLoginStore()
@@ -177,4 +177,4 @@ const showdialog = ()=>{
             }
         }
     }
-</style>
+</style>@/store/modules/user

@@ -1,22 +1,26 @@
 <template>
     <div class="login_container">
-        <el-dialog v-model="LoginStore.visiable" title="用户登录">
+        <el-dialog v-model="UserStore.visiable" title="用户登录">
             <el-row :gutter="20">
                 <el-col :span="12" :offset="0">
-                    <div class="login" v-show="sence==0">
-                        <el-form label-width="10px" :inline="false" size="normal">
-                            <el-form-item label="">
-                                <el-input placeholder="请输入手机号码" :prefix-icon="User">
+                    <div class="login" v-show="sence == 0">
+                        <el-form :model="loginParam" :rules="rules" ref="form">
+                            <el-form-item label="" prop="phone">
+                                <el-input placeholder="请输入手机号码" :prefix-icon="User" v-model="loginParam.phone">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="">
-                                <el-input placeholder="请输入手机验证码" :prefix-icon="Lock"></el-input>
+                            <el-form-item label="" prop="code">
+                                <el-input placeholder="请输入手机验证码" :prefix-icon="Lock" v-model="loginParam.code"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button size="medium" @click="">获取验证码</el-button>
+                                <el-button size="medium" @click="getCode" :disabled="!isPhone || showTime">
+                                    <span v-if="!showTime">获取验证码</span>
+                                    <CountDown v-else :showTime="showTime" @getFlag="getFlag" />
+                                </el-button>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary">用户登录</el-button>
+                                <el-button type="primary" @click="login"
+                                    :disabled="!isPhone || loginParam.code.length < 6 ? true : false">用户登录</el-button>
                             </el-form-item>
                         </el-form>
                         <div class="bottom" @click="changeObj">
@@ -36,7 +40,7 @@
                         </div>
                     </div>
                     <!-- 微信扫码登录结构 -->
-                    <div class="wxLogin" v-show="sence==1">
+                    <div class="wxLogin" v-show="sence == 1">
                         微信扫码登录结构
                     </div>
                 </el-col>
@@ -81,25 +85,113 @@
                 </el-col>
             </el-row>
             <template #footer>
-                <el-button type="primary" size="default">关闭窗口</el-button>
+                <span class="dialog-footer">
+                    <el-button @click="closeDialog">关闭窗口</el-button>
+                </span>
             </template>
         </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import useLoginStore from '../../store/modules/login';
-import { User, Lock } from '@element-plus/icons-vue'
-let LoginStore = useLoginStore();
+import { computed, reactive, ref } from 'vue';
+import useUserStore from '../../store/modules/user';
+import { User, Lock } from '@element-plus/icons-vue';
+import CountDown from '../countdown/index.vue'
+import { ElMessage } from 'element-plus';
+let UserStore = useUserStore();
 let sence = ref<number>(0)
-
+// 获取form组件实例
+let form = ref<any>()
+// 定义表单数据
+let loginParam = reactive({
+    phone: '',
+    code: ''
+})
+// 定义获取验证码是否展示倒计时 false不展示倒计时
+let showTime = ref<boolean>(false)
 // 点击扫码登录|微信小图标切换为微信扫码登录
-const changeObj = ()=>{
+const changeObj = () => {
     sence.value = 1
 }
-</script>
+// 计算当前表单元素收集的内容是否是手机号码格式
+const isPhone = computed(() => {
+    let reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+    return reg.test(loginParam.phone)
+})
+// 获取验证码 回调
+const getCode = async () => {
+    try {
+        // 获取验证码成功
+        await UserStore.getCode(loginParam.phone)
+        loginParam.code = UserStore.code;
+        showTime.value = true
+    } catch (error) {
+        // 获取验证码失败
+        ElMessage({
+            type: 'error',
+            message: (error as Error).message
+        })
+    }
+}
+// 用户登录 回调
+const login = async () => {
+    await form.value.validate();
+    
+    try {
+        // 用户登录成功
+        await UserStore.userlogin(loginParam)
+        // 关闭登录界面
+        UserStore.visiable = false
+    } catch (error) {
+        ElMessage({
+            type: 'error',
+            message: (error as Error).message
+        })
+    }
+}
+// 自定义事件，用来接受倒计时为0时，通知父组件隐藏倒计时
+const getFlag = (flag: boolean) => {
+    showTime.value = flag
+}
+// 表单校验规则
+// 手机号码自定义校验规则
+const validatorPhone = (rule:any,value:any,callBack:any)=>{
+    // rule:即为表单验证规则对象
+    // value:即为当前文本的内容
+    // callBack:回调函数
+    
+    let reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+    if(reg.test(value)){
+        callBack();
+    }else{
+        callBack(new Error("请输入正确的手机号码"))
+    }    
+}
+const validatorCode = (rule:any,value:any,callBack:any)=>{
+    let reg = /^\d{6}$/
+    if(reg.test(value)){
+        callBack()
+    }else{
+        callBack(new Error("验证码必须是六位"))
+    }
+}
+const rules = reactive({
+    // 自定义校验
+    phone:[{trigger:'change',validator:validatorPhone}],
+    code:[{trigger:'change',validator:validatorCode}]
+})
+// 关闭窗口 回调
+const closeDialog = ()=>{
+    UserStore.visiable = false;
+}
 
+</script>
+<script lang="ts">
+export default {
+    name: "Login"
+}
+</script>
 
 <style scoped lang="scss">
 .login_container {
@@ -122,9 +214,11 @@ const changeObj = ()=>{
             }
         }
     }
-    .wxLogin{
+
+    .wxLogin {
         border: 1px solid #7f7f7f;
     }
+
     .rightContent {
         margin: 10px;
 
@@ -165,4 +259,4 @@ const changeObj = ()=>{
     }
 
 }
-</style>
+</style>../../store/modules/user

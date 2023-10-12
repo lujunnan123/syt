@@ -14,7 +14,6 @@
                     <Card class="item" v-for="(item,index) in hasHospotalArr" :key="index" :hospitalInfo="item" />                   
                 </div>                
                 <el-empty v-else description="暂无数据" />
-                {{ hasHospotalArr.length }}
                 <div class="pagination">
                      <!-- 分页器 -->
                      <el-pagination 
