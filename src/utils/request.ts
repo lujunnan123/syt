@@ -1,7 +1,6 @@
 // 对于axios函数库进行二次封装
-import { CollectionTag } from '@element-plus/icons-vue'
+import useUserStore from '@/store/modules/user'
 import axios from 'axios'
-import { log } from 'console'
 import { ElMessage } from 'element-plus'
 // 利用axios.create方法创建一个axios实例：可以设置基础路由、超时的时间的设置
 const request = axios.create({
@@ -11,6 +10,11 @@ const request = axios.create({
 // 请求拦截器
 request.interceptors.request.use((config)=>{
     // config:请求拦截器回调注入的对象，配置对象的身上最重要的一件事headers属性
+      // 获取仓库，将token作为全局请求参数，放入请求头
+      let userStore = useUserStore()
+      if(userStore.userInfo.token){
+          config.headers.token = userStore.userInfo.token;
+      }
     return config
 })
 // 响应拦截器
