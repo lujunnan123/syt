@@ -103,3 +103,34 @@ export interface HospitalWorkData extends ResponseData{
     "baseMap": baseMap
   }
 }
+
+// 代表一个医生数据
+export interface Doctor{
+      "id": string,
+      "createTime": string,
+      "updateTime": string,
+      "isDeleted": number,
+      "param": {
+        "dayOfWeek": string,
+        "depname": string,
+        "hosname": string
+      },
+      "hoscode": string,
+      "depcode": string,
+      "title": string,
+      "docname":string,
+      "skill": string,
+      "workDate":string,
+      "workTime": number,
+      "reservedNumber": number,
+      "availableNumber":number,
+      "amount": number,
+      "status": number,
+      "hosScheduleId": string
+   
+}
+export type DoctorArr = Doctor[]
+// 获取医生排班接口返回的数据
+export interface DoctorData extends ResponseData{
+  data:DoctorArr
+}
