@@ -11,7 +11,8 @@
             <div class="time">{{ workData.baseMap?.workDateString }}</div>
             <div class="boxList">
                 <div class="box" v-for="item in workData.bookingScheduleList" :key="item"
-                    :class="{ active: item.status == 0 && item.availableNumber }"
+                    :class="{ active: item.status == 0 && item.availableNumber,cur:item.workDate==workTime.workDate }"
+                    
                     @click="changeTime(item)"
                     >
                     <div class="box_top">{{ item.workDate }} {{ item.dayOfWeek }}</div>
@@ -57,7 +58,7 @@
                         <!-- 右侧区域展示挂号的钱数 -->
                         <div class="right">
                             <span >{{doctor.amount}}</span>
-                            <el-button type="primary" size="default" @click="">剩余{{doctor.reservedNumber}}</el-button>
+                            <el-button type="primary" size="default" @click="goStep2(doctor)">剩余{{doctor.reservedNumber}}</el-button>
                         </div>
                     </div>
                 </div>
@@ -94,10 +95,11 @@
 import { computed, onMounted, ref } from 'vue';
 import { reqHospitalWork,reqHospitalDoctor } from '@/api/hospital/index'
 import { DoctorData, HospitalWorkData,DoctorArr, Doctor } from '@/api/hospital/type'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router'
 let $route = useRoute()
 let pageNo = ref<number>(1);
 let limit = ref<number>(5)
+let $router = useRouter()
 // 存储医院科室挂号信息
 let workData = ref<any>({})
 // 存储排班医生的数据
@@ -148,7 +150,17 @@ let afternoonArr = computed(()=>{
         return doc.workTime == 1
     })
 })
-
+// 路由跳转进入选择就诊人页面
+const goStep2 = (doctor:Doctor)=>{
+    console.log(123,doctor);
+    $router.push({
+        path:'/hospital/register_step2',
+        query:{
+            docId:doctor.id
+        }
+    })
+    
+}
 
 </script>
 <script lang="ts">
@@ -187,7 +199,7 @@ export default defineComponent({
                 flex: 1;
                 border: 2px solid #d4d4d4;
                 margin: 0 10px;
-
+                transition: all .5s;
                 &.active {
                     border: 1px solid skyblue;
                     color: #333;
@@ -196,7 +208,9 @@ export default defineComponent({
                         background: #E6F9FF;
                     }
                 }
-
+                &.cur{
+                    transform: scale(1.1);
+                }
                 .box_top {
                     height: 30px;
                     line-height: 30px;
