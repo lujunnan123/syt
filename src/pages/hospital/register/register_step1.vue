@@ -57,7 +57,7 @@
                         </div>
                         <!-- 右侧区域展示挂号的钱数 -->
                         <div class="right">
-                            <span >{{doctor.amount}}</span>
+                            <span >￥{{doctor.amount}}</span>
                             <el-button type="primary" size="default" @click="goStep2(doctor)">剩余{{doctor.reservedNumber}}</el-button>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                         <!-- 右侧区域展示挂号的钱数 -->
                         <div class="right">
                             <span >￥123</span>
-                            <el-button type="primary" size="default" @click="">剩余6</el-button>
+                            <el-button type="primary" size="default"  @click="goStep2(doctor)">剩余6</el-button>
                         </div>
                     </div>
                 </div>

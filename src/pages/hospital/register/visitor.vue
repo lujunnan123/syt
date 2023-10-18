@@ -2,8 +2,8 @@
     <div class="visitor">
         <div class="top">
             <div class="top_left">
-                <span class="yb">医保</span>
-                <span class="name">胖虎</span>
+                <span class="yb" >{{user.isInsure==1?'医保':'自费'}}</span>
+                <span class="name">{{user.name}}</span>
             </div>
             <div class="edit">
                 <el-button type="primary" size="small" :icon="Edit" @click=""></el-button>
@@ -11,15 +11,21 @@
             </div>
         </div>
         <div class="bottom">
-            <div v-for="(item) in 8" :key="item" class="item">
-                证件类型：身份证 
-            </div>
+            <div class="item">{{user.param.certificatesTypeString}}</div>
+            <div class="item">证件号码：{{user.certificatesNo}}</div>
+            <div class="item">用户性别：{{ user.sex==0?'女':'男' }}</div>
+            <div class="item">出生日期：{{user.birthdate}}</div>
+            <div class="item">手机号码：{{user.phone}}</div>
+            <div class="item">婚姻情况：{{user.isMary==0?'未婚':'已婚'}}</div>
+            <div class="item">当前住址：{{user.param.cityString}}</div>
+            <div class="item">详细地址：{{user.address}}</div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import {  Edit} from '@element-plus/icons-vue'
+defineProps(['user'])
 </script>
 
 <style scoped lang="scss">
