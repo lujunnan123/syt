@@ -1,6 +1,6 @@
 // 统一管理首页模块接口
 import request from "@/utils/request";
-import { HospitalDetail,DepartmentResponseData,LoginData, UserInfoResponseData,HospitalWorkData,DoctorData,UserResponseData } from "./type";
+import { HospitalDetail,DepartmentResponseData,LoginData, UserInfoResponseData,HospitalWorkData,DoctorData,UserResponseData,DoctorInfoData } from "./type";
 enum API{
     HOSPITALDETAIL_URL = '/hosp/hospital/',
     HOSPITALDEPARMENT_URL = '/hosp/hospital/department/',
@@ -8,7 +8,8 @@ enum API{
     USERLOGIN_URL = '/user/login',
     HOSPITALWORK_URL = '/hosp/hospital/auth/getBookingScheduleRule/',
     HOSPITALDOCTOR_URL = '/hosp/hospital/auth/findScheduleList/',
-    GETUSER_URL = '/user/patient/auth/findAll'
+    GETUSER_URL = '/user/patient/auth/findAll/',
+    GETDOCTOR_URL = '/hosp/hospital/getSchedule/'
 }
 // 医院详情接口
 export const reqhosDetail = (hoscode:string)=>request.get<any,HospitalDetail>(API.HOSPITALDETAIL_URL+hoscode);
@@ -24,3 +25,5 @@ export const reqHospitalWork = (page:number,limit:number,hoscode:string,depcode:
 export const reqHospitalDoctor = (hoscode:string,depcode:string,workdata:string)=>request.get<any,DoctorData>(API.HOSPITALDOCTOR_URL+`/${hoscode}/${depcode}/${workdata}`)
 // 获取某个账号下就诊人的信息
 export const reqGetUser = ()=>request.get<any,UserResponseData>(API.GETUSER_URL)
+// 获取排班医生信息
+export const reqDoctorInfo = (scheduleId:string)=>request.get<any,DoctorInfoData>(API.GETDOCTOR_URL+scheduleId)

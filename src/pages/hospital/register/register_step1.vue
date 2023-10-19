@@ -152,7 +152,6 @@ let afternoonArr = computed(()=>{
 })
 // 路由跳转进入选择就诊人页面
 const goStep2 = (doctor:Doctor)=>{
-    console.log(123,doctor);
     $router.push({
         path:'/hospital/register_step2',
         query:{

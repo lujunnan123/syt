@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="bottom">
-            <div class="item">{{user.param.certificatesTypeString}}</div>
+            <div class="item">证件类型：{{user.param.certificatesTypeString}}</div>
             <div class="item">证件号码：{{user.certificatesNo}}</div>
             <div class="item">用户性别：{{ user.sex==0?'女':'男' }}</div>
             <div class="item">出生日期：{{user.birthdate}}</div>
@@ -19,13 +19,16 @@
             <div class="item">婚姻情况：{{user.isMary==0?'未婚':'已婚'}}</div>
             <div class="item">当前住址：{{user.param.cityString}}</div>
             <div class="item">详细地址：{{user.address}}</div>
+            <transition name="confirm">
+                <div class="confirm" v-if="index == currentIndex">已选择</div>
+            </transition>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import {  Edit} from '@element-plus/icons-vue'
-defineProps(['user'])
+defineProps(['user','index','currentIndex'])
 </script>
 
 <style scoped lang="scss">
@@ -62,9 +65,35 @@ defineProps(['user'])
     }
     .bottom{
         padding: 12px;
+        position: relative;
         .item{
             font-size: 12px;
-            line-height: 20px;
+            line-height: 30px;
+        }
+        .confirm{
+            
+            color: red;
+            border: 1px dashed red;
+            border-radius: 50%;
+            position: absolute;
+            text-align: center;
+            line-height: 200px;
+            width: 200px;
+            height: 200px;
+            left: 20%;
+            top: 20%;
+            opacity: .5;
+            transform: rotate(25deg);
+        }
+        
+        .confirm-enter-from{
+            transform: scale(1);
+        }
+        .confirm-enter-active{
+            transition: all 0.3s;
+        }
+        .confirm-enter-to{
+            transform: scale(1.2);
         }
     }
 }

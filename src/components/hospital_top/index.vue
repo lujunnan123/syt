@@ -21,9 +21,9 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item>实名认证</el-dropdown-item>
-                                <el-dropdown-item>挂号订单</el-dropdown-item>
-                                <el-dropdown-item>就诊人管理</el-dropdown-item>
+                                <el-dropdown-item @click="changeActive('/user/certification')">实名认证</el-dropdown-item>
+                                <el-dropdown-item @click="changeActive('/user/order')">挂号订单</el-dropdown-item>
+                                <el-dropdown-item @click="changeActive('/user/patient')">就诊人管理</el-dropdown-item>
                                 <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -52,6 +52,12 @@ const logout =()=>{
     // 通知pinia仓库清空数据
     UserStore.logout()
     $router.push({path:'/home'})
+}
+// 下拉菜单点击回调
+const changeActive = (path:string)=>{
+    $router.push({
+        path:path
+    })
 }
 </script>
 
