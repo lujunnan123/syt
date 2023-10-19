@@ -81,7 +81,7 @@
                 </el-descriptions>
             </el-card>
             <div class="btn">
-                <el-button type="primary" size="default" @click="" :disabled="currentIndex==-1">确认挂号</el-button>                
+                <el-button type="primary" size="default" @click="submitorder" :disabled="currentIndex==-1">确认挂号</el-button>                
             </div>
         </div>
     </div>
@@ -90,13 +90,17 @@
 <script setup lang="ts">
 import Visitor from './visitor.vue';
 import {reqDoctorInfo, reqGetUser} from '@/api/hospital/index'
+import {reqSubmitOrder} from '@/api/user/index'
 import type {  DoctorInfoData, UserArr, UserResponseData } from '@/api/hospital/type';
 import { User } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute,useRouter } from 'vue-router';
+import { SubmitOrder } from '@/api/user/type';
+import { ElMessage } from 'element-plus';
 // 定义存储排班医生信息
 let docInfo = ref<any>({});
 let $route = useRoute();
+let $router = useRouter();
 // 定义存储就诊人信息
 let userArr= ref<UserArr >([]);
 // 定义存储用户确定就诊人索引值
@@ -113,7 +117,6 @@ const fetchUserData = async()=>{
 }
 const fetchDocData = async()=>{
     let result:DoctorInfoData = await reqDoctorInfo($route.query.docId as string)
-    console.log(result);
     if(result.code == 200){
         docInfo.value = result.data
     }     
@@ -121,6 +124,27 @@ const fetchDocData = async()=>{
 // 选择就诊人信息回调
 const changeIndex = (index:number)=>{
     currentIndex.value = index    
+}
+// 提交表单回调
+const submitorder = async()=>{
+    // 医院编号
+    let hoscode = docInfo.value.hoscode;
+    // 医生ID
+    let scheduleId = docInfo.value.id;
+    // 就诊人ID
+    let patientId = userArr.value[currentIndex.value].id
+    let result:SubmitOrder = await reqSubmitOrder(hoscode,scheduleId,patientId);
+    if(result.code == 200){
+        $router.push({
+            path:'/user/order',
+            query:{orderId:result.data}
+        })
+    }else{
+        ElMessage({
+            type:'error',
+            message:result.message
+        })
+    }
 }
 </script>
 <style scoped lang="scss">
