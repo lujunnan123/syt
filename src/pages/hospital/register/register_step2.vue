@@ -11,7 +11,7 @@
                     </div>
                 </template>
                 <div class="user">
-                    <Visitor v-for="user in userArr" :key="user.id" class="item" :user="user" />
+                    <Visitor @click="changeIndex(index)" v-for="(user,index) in userArr" :key="user.id" class="item" :user="user" :index="index" :currentIndex = 'currentIndex' />
                 </div>
             </el-card>
             <!-- 卡片：展示医生信息 -->
@@ -36,7 +36,7 @@
                                 就诊医院：
                             </div>
                         </template>
-                        xxxxxxxxxxxxxxx
+                        {{docInfo.param?.hosname}}
                     </el-descriptions-item> 
                     <el-descriptions-item>
                         <template #label>
@@ -44,7 +44,7 @@
                                 就诊科室：
                             </div>
                         </template>
-                        xxxxxxxxxxxxxxx
+                        {{docInfo.param?.depname}}
                     </el-descriptions-item> 
                     <el-descriptions-item>
                         <template #label>
@@ -52,7 +52,7 @@
                                 医生姓名：
                             </div>
                         </template>
-                        xxxxxxxxxxxxxxx
+                        {{docInfo?.docname}}
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template #label>
@@ -60,7 +60,7 @@
                                 医生职称：
                             </div>
                         </template>
-                        xxxxxxxxxxxxxxx
+                        {{docInfo?.title}}
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template #label>
@@ -68,7 +68,7 @@
                                 医生专长：
                             </div>
                         </template>
-                        xxxxxxxxxxxxxxx
+                        {{docInfo?.skill}}
                     </el-descriptions-item>
                     <el-descriptions-item>
                         <template #label>
@@ -76,12 +76,12 @@
                                 医生服务费：
                             </div>
                         </template>
-                        <span style="color: red;">123</span>
+                        <span style="color: red;">{{ docInfo.amount }}</span>
                     </el-descriptions-item>
                 </el-descriptions>
             </el-card>
             <div class="btn">
-                <el-button type="primary" size="default" @click="">确认挂号</el-button>                
+                <el-button type="primary" size="default" @click="" :disabled="currentIndex==-1">确认挂号</el-button>                
             </div>
         </div>
     </div>
@@ -89,21 +89,38 @@
 
 <script setup lang="ts">
 import Visitor from './visitor.vue';
-import {reqGetUser} from '@/api/hospital/index'
-import type { UserArr, UserResponseData } from '@/api/hospital/type';
+import {reqDoctorInfo, reqGetUser} from '@/api/hospital/index'
+import type {  DoctorInfoData, UserArr, UserResponseData } from '@/api/hospital/type';
 import { User } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue';
-// 定义变量保存就诊人信息
-let userArr= ref<UserArr >([])
+import { useRoute } from 'vue-router';
+// 定义存储排班医生信息
+let docInfo = ref<any>({});
+let $route = useRoute();
+// 定义存储就诊人信息
+let userArr= ref<UserArr >([]);
+// 定义存储用户确定就诊人索引值
+let currentIndex = ref<number>(-1)
 onMounted(() => {
-    fetchUserData()
+    // 获取就诊人信息
+    fetchUserData();
+    // 获取排班医生信息
+    fetchDocData();
 })
 const fetchUserData = async()=>{
     let result:UserResponseData = await reqGetUser();
-    console.log(result);
     userArr.value = result.data
-    
-
+}
+const fetchDocData = async()=>{
+    let result:DoctorInfoData = await reqDoctorInfo($route.query.docId as string)
+    console.log(result);
+    if(result.code == 200){
+        docInfo.value = result.data
+    }     
+}
+// 选择就诊人信息回调
+const changeIndex = (index:number)=>{
+    currentIndex.value = index    
 }
 </script>
 <style scoped lang="scss">

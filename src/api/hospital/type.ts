@@ -174,3 +174,8 @@ export type UserArr = User[];
 export interface UserResponseData extends ResponseData{
   data:UserArr
 }
+
+// 代表排班医生信息
+export interface DoctorInfoData extends ResponseData{
+  data:Doctor
+}
