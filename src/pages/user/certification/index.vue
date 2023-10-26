@@ -47,20 +47,20 @@
                     </el-descriptions>
                     <!-- 用户未认证结构 -->
                     <el-form v-else ref="form" style="width: 60%;margin:20px auto" label-width="80px" :inline="false"
-                        size="normal">
-                        <el-form-item label="用户姓名">
+                        size="normal" :rules="rules" :model="params">
+                        <el-form-item label="用户姓名" prop="name" >
                             <el-input placeholder="请输入用户姓名" v-model="params.name"></el-input>
                         </el-form-item>
-                        <el-form-item label="证件类型">
+                        <el-form-item label="证件类型" prop="certificatesType">
                             <el-select style="width:100%" placeholder="请选择证件类型" v-model="params.certificatesType">
                                 <el-option :label="item.name" :value="item.value" v-for="(item, index) in arrType"
                                     :key="index"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="证件号码">
-                            <el-input placeholder="请输入证件号码" v-model="params.certificatesNo"></el-input>
+                        <el-form-item label="证件号码" prop="certificatesNo">
+                            <el-input placeholder="请输入证件号码" v-model="params.certificatesNo" ></el-input>
                         </el-form-item>
-                        <el-form-item label="上传证件">
+                        <el-form-item label="上传证件" prop="certificatesUrl">
                             <!-- 
                                 upload组件
                                 action：向服务器提交图片的路径
@@ -109,6 +109,8 @@ let params = reactive({
 let dialogVisible = ref<boolean>(false)
 // 获取文件上传组件upload组件实例
 let upload = ref()
+// 获取表单组件
+let form = ref()
 onMounted(() => {
     getUserInfo()
     getType()
@@ -142,6 +144,8 @@ const exceedhandler = () => {
 }
 // 图片上传成功钩子
 const successhandle = (response: any) => {
+    // 如果图片上传成功 清除校验结果
+    form.value.clearValidate('validatorUrl')
     // response：上传成功后返回的数据
     // 收集上传图片成功的地址
     params.certificatesUrl = response.data;
@@ -170,11 +174,13 @@ const reset = () => {
     // 清除已上传的文件列表
     upload.value.clearFiles()
 }
+// 提交按钮回调
 const submit = async () => {
+    // 全部的表单校验通过返回一个成功的Promise；一个失败就返回失败Promise，后面语句不执行
+    await form.value.validate()
     try {
         // 认证成功
         await reqUserCertation(params)
-
         ElMessage({
             type:'success',
             message:"认证成功"
@@ -188,6 +194,46 @@ const submit = async () => {
         })
     }
 }
+// 表单校验
+const validatorNo = (rule:any,value:any,callBack:any)=>{
+    let reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+    let hkb = /^\d{9}$/;
+    if(reg.test(value)||hkb.test(value)){
+        callBack();
+    }else{
+        callBack(new Error('请输入正确的身份证号'))
+    }    
+}
+const validatorName = (rule:any,value:any,callBack:any)=>{
+    let reg = /^[\u00B7\u3007\u3400-\u4DBF\u4E00-\u9FFF\uE000-\uF8FF\uD840-\uD8C0\uDC00-\uDFFF\uF900-\uFAFF]+$/
+    if(reg.test(value)){
+        callBack();
+    }else{
+        callBack(new Error('请输入正确的姓名'))
+    }    
+}
+const validatorType = (rule:any,value:any,callBack:any)=>{
+    if(value=='10'||value=='20'){
+        callBack()
+    }else{
+        callBack(new Error('请选择证件类型'));
+    }    
+}
+const validatorUrl = (rule:any,value:any,callBack:any)=>{
+    if(value.length){
+        callBack();
+    }else{
+        callBack(new Error('请上传证件照图'))
+    }
+    
+}
+let rules = reactive({
+    name:[{required:true,validator:validatorName,trigger:'blur'}],
+    certificatesNo:[{required:true,validator:validatorNo,trigger:'blur'}],
+    certificatesType:[{required:true,validator:validatorType,trigger:'blur'}],
+    certificatesUrl:[{required:true,validator:validatorUrl}],
+})
+
 </script>
 
 <style scoped lang="scss">
