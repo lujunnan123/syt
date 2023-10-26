@@ -1,3 +1,5 @@
+import { type } from "os"
+
 export interface ResponseData {
     "code": number,
     "message": string,
@@ -64,4 +66,30 @@ export interface UserInfo {
 }
 export interface UserInfoData extends ResponseData{
     data:UserInfo
+}
+
+// 代表证件类型的数据ts
+export interface CertationType{
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {},
+    "parentId": number,
+    "name": string,
+    "value": string,
+    "dictCode": string,
+    "hasChildren": boolean
+}
+export type CertationArr = CertationType[]
+export interface CertationTypeResponseData extends ResponseData{
+    data:CertationArr
+}
+
+// 用户认证的携带参数ts类型
+export interface UserParams{  
+        "certificatesNo": string,
+        "certificatesType": string,
+        "certificatesUrl": string,
+        "name":string
 }
