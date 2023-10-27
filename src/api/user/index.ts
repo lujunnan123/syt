@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type {CancelOrdeData, CertationTypeResponseData, OrderResponseData, SubmitOrder, UserInfoData, UserParams} from "./type"
+import type {CancelOrdeData, CertationTypeResponseData, OrderInfoResponseData, OrderResponseData, SubmitOrder, UserInfoData, UserParams} from "./type"
 
 enum API{
     // 提交订单，获取订单号码接口
@@ -10,7 +10,8 @@ enum API{
    //获取当前账号用户信息
    USERINFO_URL = "/user/auth/getUserInfo",
    CERTIFICATIONTYPE_URL="/cmn/dict/findByDictCode/",
-   USERCERTATION_URL = "/user/auth/userAuah"
+   USERCERTATION_URL = "/user/auth/userAuah",
+   ORDER_URL="/order/orderInfo/auth/"
 }
 // 提交订单
 export const reqSubmitOrder = (hoscode:string,scheduleId:string,patientId:number)=>request.post<any,SubmitOrder>(API.SUBMITORDER_URL+`/${hoscode}/${scheduleId}/${patientId}`)
@@ -26,3 +27,5 @@ export const reqUserInfo = ()=>request.get<any,UserInfoData>(API.USERINFO_URL)
 export const reqCertationType = (CertificatesType='CertificatesType')=>request.get<any,CertationTypeResponseData>(API.CERTIFICATIONTYPE_URL+CertificatesType)
 // 用户认证接口
 export const reqUserCertation = (data:UserParams)=>request.post<any,any>(API.USERCERTATION_URL+data)
+// 全部订单查询
+export const reqUserOrderInfo = (page:number,limit:number,patientId:string,orderStatus:string)=>request.get<any,OrderInfoResponseData>(API.ORDER_URL+`/${page}/${limit}?patientId=${patientId}&orderStatus=${orderStatus}`)

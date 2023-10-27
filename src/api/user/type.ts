@@ -48,7 +48,7 @@ export interface CancelOrdeData extends ResponseData {
 }
 
 // 就诊人信息
-export interface UserInfo {    
+export interface UserInfo {
     "id": number,
     "createTime": string,
     "updateTime": string,
@@ -64,12 +64,12 @@ export interface UserInfo {
     "authStatus": number,
     "status": number
 }
-export interface UserInfoData extends ResponseData{
-    data:UserInfo
+export interface UserInfoData extends ResponseData {
+    data: UserInfo
 }
 
 // 代表证件类型的数据ts
-export interface CertationType{
+export interface CertationType {
     "id": number,
     "createTime": string,
     "updateTime": string,
@@ -82,14 +82,58 @@ export interface CertationType{
     "hasChildren": boolean
 }
 export type CertationArr = CertationType[]
-export interface CertationTypeResponseData extends ResponseData{
-    data:CertationArr
+export interface CertationTypeResponseData extends ResponseData {
+    data: CertationArr
 }
 
 // 用户认证的携带参数ts类型
-export interface UserParams{  
-        "certificatesNo": string,
-        "certificatesType": string,
-        "certificatesUrl": string,
-        "name":string
+export interface UserParams {
+    "certificatesNo": string,
+    "certificatesType": string,
+    "certificatesUrl": string,
+    "name": string
+}
+
+// 挂号订单ts
+export interface Order {
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {
+        "orderStatusString": string
+    },
+    "userId": null,
+    "outTradeNo": string,
+    "hoscode": string,
+    "hosname": string,
+    "depcode": string,
+    "depname": string,
+    "scheduleId": null,
+    "title": string,
+    "reserveDate": string,
+    "reserveTime": number,
+    "patientId": number,
+    "patientName": null,
+    "patientPhone": null,
+    "hosRecordId": string,
+    "number": number,
+    "fetchTime": string,
+    "fetchAddress": string,
+    "amount": number,
+    "quitTime": string,
+    "orderStatus": number
+}
+export type Records = Order[]
+export interface OrderInfoResponseData extends ResponseData {
+    data: {
+        "records":Records,
+        "total": number,
+        "size": number,
+        "current": number,
+        "orders": [],
+        "hitCount": boolean,
+        "searchCount": boolean,
+        "pages": number
+    }
 }
