@@ -6,8 +6,8 @@
                 <span class="name">{{user.name}}</span>
             </div>
             <div class="edit">
-                <el-button type="primary" size="small" :icon="Edit" @click=""></el-button>
-                
+                <el-button type="primary" size="small" :icon="Edit" @click=""></el-button> 
+                <slot></slot>
             </div>
         </div>
         <div class="bottom">

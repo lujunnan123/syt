@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import Visitor from './visitor.vue';
+import Visitor from '@/components/visitor/visitor.vue';
 import {reqDoctorInfo, reqGetUser} from '@/api/hospital/index'
 import {reqSubmitOrder} from '@/api/user/index'
 import type {  DoctorInfoData, UserArr, UserResponseData } from '@/api/hospital/type';
