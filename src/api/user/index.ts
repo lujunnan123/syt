@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type {CancelOrdeData, CertationTypeResponseData, OrderInfoResponseData, OrderResponseData, SubmitOrder, UserInfoData, UserParams} from "./type"
+import type {AllUserResponseData, CancelOrdeData, CertationTypeResponseData, OrderInfoResponseData, OrderResponseData, OrderStateRespoonseData, SubmitOrder, UserInfoData, UserParams} from "./type"
 
 enum API{
     // 提交订单，获取订单号码接口
@@ -8,10 +8,12 @@ enum API{
    ORDERCANCEL_URL = "/order/orderInfo/auth/cancelOrder/",
    QRCODE_URL = "/order/weixin/createNative/",
    //获取当前账号用户信息
-   USERINFO_URL = "/user/auth/getUserInfo",
+   USERINFO_URL = "/user/auth/getUserInfo/",
    CERTIFICATIONTYPE_URL="/cmn/dict/findByDictCode/",
-   USERCERTATION_URL = "/user/auth/userAuah",
-   ORDER_URL="/order/orderInfo/auth/"
+   USERCERTATION_URL = "/user/auth/userAuah/",
+   ORDER_URL="/order/orderInfo/auth/",
+   ALLPATIENT_URL="/user/patient/auth/findAll/",
+   ORDERSTATE_URL= "/order/orderInfo/auth/getStatusList"
 }
 // 提交订单
 export const reqSubmitOrder = (hoscode:string,scheduleId:string,patientId:number)=>request.post<any,SubmitOrder>(API.SUBMITORDER_URL+`/${hoscode}/${scheduleId}/${patientId}`)
@@ -29,3 +31,7 @@ export const reqCertationType = (CertificatesType='CertificatesType')=>request.g
 export const reqUserCertation = (data:UserParams)=>request.post<any,any>(API.USERCERTATION_URL+data)
 // 全部订单查询
 export const reqUserOrderInfo = (page:number,limit:number,patientId:string,orderStatus:string)=>request.get<any,OrderInfoResponseData>(API.ORDER_URL+`/${page}/${limit}?patientId=${patientId}&orderStatus=${orderStatus}`)
+// 获取当前账号所有就诊人
+export const reqAllUser = ()=>request.get<any,AllUserResponseData>(API.ALLPATIENT_URL)
+// 获取订单的状态
+export const reqOrderState = ()=> request.get<any,OrderStateRespoonseData>(API.ORDERSTATE_URL)

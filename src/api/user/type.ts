@@ -137,3 +137,51 @@ export interface OrderInfoResponseData extends ResponseData {
         "pages": number
     }
 }
+
+// 就诊人信息数据类型
+export interface patient{
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {
+        "certificatesTypeString": string,
+        "contactsCertificatesTypeString": null,
+        "cityString": null,
+        "fullAddress": string,
+        "districtString": null,
+        "provinceString": null
+    },
+    "userId": number,
+    "name": string,
+    "certificatesType": string,
+    "certificatesNo": string,
+    "sex": number,
+    "birthdate": null,
+    "phone": string,
+    "isMarry": number,
+    "provinceCode": null,
+    "cityCode": null,
+    "districtCode": null,
+    "address": "",
+    "contactsName": string,
+    "contactsCertificatesType": string,
+    "contactsCertificatesNo": string,
+    "contactsPhone": string,
+    "isInsure": number,
+    "cardNo": null,
+    "status": string
+}
+export type AllUser = patient[]
+export interface AllUserResponseData extends ResponseData{
+    data:AllUser
+}
+export interface OrderState{
+    "comment":string,
+    "status": number
+}
+// 订单状态ts
+export type OrderArr = OrderState[];
+export interface OrderStateRespoonseData extends ResponseData{
+    data:OrderArr
+}
