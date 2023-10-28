@@ -6,7 +6,7 @@
                 <span class="name">{{user.name}}</span>
             </div>
             <div class="edit">
-                <el-button type="primary" size="small" :icon="Edit" @click=""></el-button> 
+                <el-button type="primary" size="small" :icon="Edit" @click="edit"></el-button> 
                 <slot></slot>
             </div>
         </div>
@@ -28,7 +28,12 @@
 
 <script setup lang="ts">
 import {  Edit} from '@element-plus/icons-vue'
+const edit = ()=>{
+    $emit('changeScene')
+}
 defineProps(['user','index','currentIndex'])
+
+let $emit = defineEmits(["changeScene"])
 </script>
 
 <style scoped lang="scss">
