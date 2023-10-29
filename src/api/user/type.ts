@@ -185,3 +185,41 @@ export type OrderArr = OrderState[];
 export interface OrderStateRespoonseData extends ResponseData{
     data:OrderArr
 }
+
+// 地址选框数据类型
+export interface address{
+map(arg0: (item: any) => { label: any; value: any }): unknown
+    "id": number,
+    "createTime": string,
+    "updateTime": string,
+    "isDeleted": number,
+    "param": {},
+    "parentId": number,
+    "name": string,
+    "value": string,
+    "dictCode": null,
+    "hasChildren": boolean
+}
+export type addressArr = address[];
+export interface addressResponseData extends ResponseData{
+    data:address
+}
+
+// 新增或修改用户信息的数据类型
+export interface AddOrUpdataUser{
+    id?:string,    
+     "address":string,
+     addressSelectes:string[],
+    "birthdate": string,
+    "certificatesNo": string,
+    "certificatesType": string,
+    "isInsure": number,
+    "isMarry": number,
+    "name": string, 
+    "phone": string, 
+    "sex": number , 
+    "contactsName": string,
+    "contactsPhone": string,  
+    "contactsCertificatesNo": string,
+    "contactsCertificatesType": string, 
+}

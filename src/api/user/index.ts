@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import type {AllUserResponseData, CancelOrdeData, CertationTypeResponseData, OrderInfoResponseData, OrderResponseData, OrderStateRespoonseData, SubmitOrder, UserInfoData, UserParams} from "./type"
+import type {AddOrUpdataUser, AllUserResponseData, CancelOrdeData, CertationTypeResponseData, OrderInfoResponseData, OrderResponseData, OrderStateRespoonseData, SubmitOrder, UserInfoData, UserParams, addressResponseData} from "./type"
 
 enum API{
     // 提交订单，获取订单号码接口
@@ -13,7 +13,10 @@ enum API{
    USERCERTATION_URL = "/user/auth/userAuah/",
    ORDER_URL="/order/orderInfo/auth/",
    ALLPATIENT_URL="/user/patient/auth/findAll/",
-   ORDERSTATE_URL= "/order/orderInfo/auth/getStatusList"
+   ORDERSTATE_URL= "/order/orderInfo/auth/getStatusList",
+   CITY_URL = "/cmn/dict/findByParentId/",
+   ADDUSER_URL="/user/patient/auth/save",
+   UPDATAUSER_USER="/user/patient/auth/update"
 }
 // 提交订单
 export const reqSubmitOrder = (hoscode:string,scheduleId:string,patientId:number)=>request.post<any,SubmitOrder>(API.SUBMITORDER_URL+`/${hoscode}/${scheduleId}/${patientId}`)
@@ -35,3 +38,13 @@ export const reqUserOrderInfo = (page:number,limit:number,patientId:string,order
 export const reqAllUser = ()=>request.get<any,AllUserResponseData>(API.ALLPATIENT_URL)
 // 获取订单的状态
 export const reqOrderState = ()=> request.get<any,OrderStateRespoonseData>(API.ORDERSTATE_URL)
+// 获取城市数据
+export const reqCity = (parentId:string)=>request.get<any,addressResponseData>(API.CITY_URL+parentId)
+// 新增与修改已有的就诊人接口方法
+export const reqAddOrUpdataUser = (data:AddOrUpdataUser)=>{
+    if(data.id){
+        return request.put(API.UPDATAUSER_USER+data)
+    }else{
+        return request.get(API.ADDUSER_URL)
+    }
+}
