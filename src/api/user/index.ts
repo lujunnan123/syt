@@ -43,8 +43,9 @@ export const reqCity = (parentId:string)=>request.get<any,addressResponseData>(A
 // 新增与修改已有的就诊人接口方法
 export const reqAddOrUpdataUser = (data:AddOrUpdataUser)=>{
     if(data.id){
-        return request.put(API.UPDATAUSER_USER+data)
+        // return request.put(API.UPDATAUSER_USER+data)
+        return request.put(API.UPDATAUSER_USER,data)
     }else{
-        return request.get(API.ADDUSER_URL)
+        return request.post(API.ADDUSER_URL, data)
     }
 }
