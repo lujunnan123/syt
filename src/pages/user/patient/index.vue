@@ -21,17 +21,17 @@
                 <el-divider content-position="left">就诊人信息</el-divider>
                 <el-form style="width: 60%; margin: 10px auto;" ref="form" label-width="80px" :inline="false"
                     size="normal">
-                    <el-form-item label="用户姓名">
-                        <el-input placeholder="请你输入用户姓名"></el-input>
+                    <el-form-item label="用户姓名" >
+                        <el-input v-model="userParams.name" placeholder="请你输入用户姓名"></el-input>
                     </el-form-item>
                     <el-form-item label="证件类型">
-                        <el-select placeholder="请你选择证件类型" clearable filterable @change="">
+                        <el-select v-model="userParams.certificatesType" placeholder="请你选择证件类型" clearable filterable @change="">
                             <el-option v-for="item in certationType" :key="item.id" :label="item.name" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="证件号码">
-                        <el-input placeholder="请你输入证件号码"></el-input>
+                        <el-input v-model="userParams.certificatesNo" placeholder="请你输入证件号码"></el-input>
                     </el-form-item>
                     <el-form-item label="用户性别">
                         <el-radio-group v-model="radio">
@@ -44,14 +44,17 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="出生日期" size="normal">
-                        <el-date-picker type="date" placeholder="请选择日期"  />
+                        <el-date-picker v-model="userParams.birthdate" type="date" placeholder="请选择日期"  />
+                    </el-form-item>
+                    <el-form-item label="手机号">
+                        <el-input v-model="userParams.phone" placeholder="请你输入手机号码"></el-input>
                     </el-form-item>
                 </el-form>
                 <el-divider content-position="left">建档信息（完善后部分医院首次就诊不排队建档）</el-divider>
                 <el-form style="width: 60%; margin: 10px auto;" ref="form" label-width="80px" :inline="false"
                     size="normal">
                     <el-form-item label="婚姻情况">
-                        <el-radio-group @change="">
+                        <el-radio-group @change="" v-model="userParams.isMarry">
                             <el-radio :label="0">
                                 已婚
                             </el-radio>
@@ -61,7 +64,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="自费/医保">
-                        <el-radio-group @change="">
+                        <el-radio-group @change="" v-model="userParams.isInsure">
                             <el-radio :label="0">
                                 自费
                             </el-radio>
@@ -71,10 +74,10 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="当前地址">
-                        <el-cascader :props="props" placeholder="请选择当前地址" />
+                        <el-cascader v-model="userParams.addressSelectes" :props="props" placeholder="请选择当前地址" />
                     </el-form-item>
                     <el-form-item label="详细地址" size="normal">
-                        <el-input placeholder="请你输入用户详细地址"></el-input>
+                        <el-input v-model="userParams.address" placeholder="请你输入用户详细地址"></el-input>
                     </el-form-item>
                 </el-form>
 
@@ -82,23 +85,23 @@
                 <el-form style="width: 60%; margin: 10px auto;" ref="form" label-width="80px" :inline="false"
                     size="normal">
                     <el-form-item label="用户姓名">
-                        <el-input placeholder="请你输入用户姓名"></el-input>
+                        <el-input v-model="userParams.contactsName" placeholder="请你输入用户姓名"></el-input>
                     </el-form-item>
                     <el-form-item label="证件类型">
-                        <el-select placeholder="请你选择证件类型" clearable filterable @change="">
+                        <el-select  v-model="userParams.contactsCertificatesType" placeholder="请你选择证件类型" clearable filterable @change="">
                             <el-option v-for="item in certationType" :key="item.id" :label="item.name" :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="证件号码">
-                        <el-input placeholder="请你输入证件号码"></el-input>
+                        <el-input v-model="userParams.contactsCertificatesNo" placeholder="请你输入证件号码"></el-input>
                     </el-form-item>
                     <el-form-item label="手机号码">
-                        <el-input placeholder="请你输入手机号码"></el-input>
+                        <el-input v-model="userParams.contactsPhone" placeholder="请你输入手机号码"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary">立即创建</el-button>
-                        <el-button>取消</el-button>
+                        <el-button type="primary" @click="submit">提交</el-button>
+                        <el-button @click="reset">重置</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -109,27 +112,51 @@
 </template>
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import Visitor from '@/components/visitor/visitor.vue';
 import { UserArr, UserResponseData } from '@/api/hospital/type';
 import { reqGetUser } from '@/api/hospital';
 import { User, Delete } from '@element-plus/icons-vue';
-import { reqCertationType, reqCity } from '@/api/user';
-import { CertationArr, CertationTypeResponseData } from '@/api/user/type';
-import { CascaderProps } from 'element-plus';
+import { reqAddOrUpdataUser, reqCertationType, reqCity } from '@/api/user';
+import { AddOrUpdataUser, CertationArr, CertationTypeResponseData } from '@/api/user/type';
+import { CascaderProps, ElMessage } from 'element-plus';
+import { useRoute,useRouter } from 'vue-router';
 // 定义存储就诊人信息
 let userArr = ref<UserArr>([]);
 let radio = ref('1')
 let scene = ref<number>(0);
 // 存储证件类型数组
 let certationType = ref<CertationArr>([]);
-
+// 绑定响应式 表单数据
+let userParams = reactive<AddOrUpdataUser>({    
+    address:"" ,
+    addressSelectes:[],
+    birthdate: "",
+    certificatesNo: "",
+    certificatesType: "",
+    isInsure: 0,
+    isMarry: 0,
+    name: "", 
+    phone: "", 
+    sex: 0 , 
+    contactsName: "",
+    contactsPhone: "",  
+    contactsCertificatesNo: "",
+    contactsCertificatesType: "",
+})
+let $route = useRoute();
+let $router = useRouter()
 onMounted(() => {
     // 获取就诊人信息
     fetchUserData();
     // 获取证件类型
     getCertification();
+    // 判断是否从挂号组件中跳转过来【挂号组件路径中携带参数type==add】
+    if($route.query.type=='add'){
+        scene.value=1
+    }
 })
+// 获取全部就诊人
 const fetchUserData = async () => {
     let result: UserResponseData = await reqGetUser();
     userArr.value = result.data
@@ -166,7 +193,49 @@ const props:CascaderProps = {
         // 注入组件需要展示的数据
         resolve(showData);
     }
+}
+// 表单提交
+const submit = async ()=>{
+    try {
+        await reqAddOrUpdataUser(userParams)
+        ElMessage({
+            type:'success',
+            message:userParams.id?'更新成功':'创建成功'
+        });
+        if($route.query.type){
+            $router.back()
+        }else{
+            // 切换场景
+            scene.value = 0;
+            // 重新获取全部就诊人
+            fetchUserData()
+        }
+    } catch (error ) {
+        ElMessage({
+            type:'error',
+            message:userParams.id?'更新失败':'新建失败'
+        })
+    }
 } 
+// 重置按钮
+const reset = ()=>{
+    Object.assign(userParams,{    
+    address:"" ,
+    addressSelectes:[],
+    birthdate: "",
+    certificatesNo: "",
+    certificatesType: "",
+    isInsure: 0,
+    isMarry: 0,
+    name: "", 
+    phone: "", 
+    sex: 0 , 
+    contactsName: "",
+    contactsPhone: "",  
+    contactsCertificatesNo: "",
+    contactsCertificatesType: "",
+})
+}
 </script>
 
 <style scoped lang="scss">

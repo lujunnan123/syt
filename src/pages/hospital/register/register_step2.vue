@@ -7,7 +7,7 @@
                 <template #header>
                     <div class="card-header">
                         <span>请选择就诊人</span>
-                        <el-button class="button" type="success" :icon="User">添加就诊人</el-button>
+                        <el-button class="button" type="success" :icon="User" @click="addUser">添加就诊人</el-button>
                     </div>
                 </template>
                 <div class="user">
@@ -145,6 +145,13 @@ const submitorder = async()=>{
             message:result.message
         })
     }
+}
+// 新建就诊人回调
+const addUser = ()=>{
+    $router.push({
+        path:'/user/patient',
+        query:{type:'add'}
+    })
 }
 </script>
 <style scoped lang="scss">
