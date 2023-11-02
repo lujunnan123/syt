@@ -99,6 +99,9 @@ import useUserStore from '../../store/modules/user';
 import { User, Lock } from '@element-plus/icons-vue';
 import CountDown from '../countdown/index.vue'
 import { ElMessage } from 'element-plus';
+import {useRoute,useRouter} from 'vue-router';
+let $route = useRoute();
+let $router = useRouter()
 let UserStore = useUserStore();
 let sence = ref<number>(0)
 // 获取form组件实例
@@ -125,7 +128,8 @@ const getCode = async () => {
         // 获取验证码成功
         await UserStore.getCode(loginParam.phone)
         loginParam.code = UserStore.code;
-        showTime.value = true
+        showTime.value = true;
+
     } catch (error) {
         // 获取验证码失败
         ElMessage({
@@ -142,7 +146,16 @@ const login = async () => {
         // 用户登录成功
         await UserStore.userlogin(loginParam)
         // 关闭登录界面
-        UserStore.visiable = false
+        UserStore.visiable = false;
+
+        // 获取url的query参数
+        let redirect = $route.query.redirect;
+        if(redirect){
+            // 判断路由是否有redirect参数（用户未登录被拦截会产生此路径参数）
+            $router.push(redirect as string);
+        }else{
+            $router.push('/home')
+        }
     } catch (error) {
         ElMessage({
             type: 'error',
