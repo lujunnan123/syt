@@ -28,12 +28,25 @@
 
 <script setup lang="ts">
 import {  Edit} from '@element-plus/icons-vue'
-const edit = ()=>{
-    $emit('changeScene')
-}
-defineProps(['user','index','currentIndex'])
-
+import { useRoute,useRouter } from 'vue-router';
+let props = defineProps(['user','index','currentIndex'])
 let $emit = defineEmits(["changeScene"])
+let $route = useRoute();
+let $router = useRouter();
+// 修改按钮回调
+const edit = ()=>{
+    if($route.path=='/user/patient'){
+        // console.log('当前为路由器管理');    
+        $emit('changeScene',props.user)    
+    }else{
+        // console.log('当前为预约挂号');
+        $router.push({
+            path:'/user/patient',
+            query:{type:'edit',id:props.user.id}
+        })
+    }
+}
+
 </script>
 
 <style scoped lang="scss">

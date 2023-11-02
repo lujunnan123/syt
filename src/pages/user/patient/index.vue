@@ -112,7 +112,7 @@
 </template>
 <script setup lang="ts">
 
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import Visitor from '@/components/visitor/visitor.vue';
 import { UserArr, UserResponseData } from '@/api/hospital/type';
 import { reqGetUser } from '@/api/hospital';
@@ -148,13 +148,14 @@ let $route = useRoute();
 let $router = useRouter()
 onMounted(() => {
     // 获取就诊人信息
-    fetchUserData();
+     fetchUserData();
     // 获取证件类型
-    getCertification();
+     getCertification();
     // 判断是否从挂号组件中跳转过来【挂号组件路径中携带参数type==add】
     if($route.query.type=='add'){
         scene.value=1
     }
+  
 })
 // 获取全部就诊人
 const fetchUserData = async () => {
@@ -166,8 +167,11 @@ const addUser = () => {
     scene.value = 1
 }
 // 修改用户信息
-const changeScene = () => {
+const changeScene = (user:AddOrUpdataUser) => {
     scene.value = 1
+    // 收集已有的就诊人信息
+    Object.assign(userParams,user);
+    
 }
 // 获取证件类型
 const getCertification = async () => {
@@ -219,7 +223,8 @@ const submit = async ()=>{
 } 
 // 重置按钮
 const reset = ()=>{
-    Object.assign(userParams,{    
+    Object.assign(userParams,{  
+        id:null,  
     address:"" ,
     addressSelectes:[],
     birthdate: "",
@@ -236,6 +241,24 @@ const reset = ()=>{
     contactsCertificatesType: "",
 })
 }
+/* watch(
+    ()=>userArr.value,
+    ()=>{
+        console.log(123);        
+    }
+) */
+// 监听全部就诊人的数据
+watch(
+    ()=>userArr.value,
+    ()=>{
+        if($route.query.type=='edit'){
+            let user = userArr.value.find((item:any)=>{
+                return item.id === $route.query.id;
+            })
+            Object.assign(userParams,user)
+        }        
+    }
+)
 </script>
 
 <style scoped lang="scss">
