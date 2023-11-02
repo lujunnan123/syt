@@ -12,7 +12,12 @@
             <div class="user" v-if="scene == 0">
                 <Visitor v-for="(user, index) in userArr" :key="user.id" @changeScene="changeScene" class="item"
                     :user="user" :index="index">
-                    <el-button type="danger" size="small" :icon="Delete" @click=""></el-button>
+                    
+                    <el-popconfirm :title='`是否要删除${user.name}`' @confirm="removeUser(user.id)">
+                        <template #reference>
+                            <el-button type="danger" size="small" :icon="Delete" @click=""></el-button>
+                        </template>
+                    </el-popconfirm>
                 </Visitor>
             </div>
 
@@ -117,7 +122,7 @@ import Visitor from '@/components/visitor/visitor.vue';
 import { UserArr, UserResponseData } from '@/api/hospital/type';
 import { reqGetUser } from '@/api/hospital';
 import { User, Delete } from '@element-plus/icons-vue';
-import { reqAddOrUpdataUser, reqCertationType, reqCity } from '@/api/user';
+import { reqAddOrUpdataUser, reqCertationType, reqCity, reqRemoveUser } from '@/api/user';
 import { AddOrUpdataUser, CertationArr, CertationTypeResponseData } from '@/api/user/type';
 import { CascaderProps, ElMessage } from 'element-plus';
 import { useRoute,useRouter } from 'vue-router';
@@ -240,6 +245,23 @@ const reset = ()=>{
     contactsCertificatesNo: "",
     contactsCertificatesType: "",
 })
+}
+// 删除某个用户
+const removeUser = async(id:number)=>{
+    try {
+        // 删除用户成功
+        await reqRemoveUser(id);
+        ElMessage({
+            type:'success',
+            message:'删除成功！'
+        })
+        fetchUserData()
+    } catch (error) {
+        ElMessage({
+            type:'error',
+            message:'删除失败'
+        })
+    }
 }
 /* watch(
     ()=>userArr.value,

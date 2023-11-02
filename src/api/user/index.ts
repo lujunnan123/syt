@@ -16,7 +16,8 @@ enum API{
    ORDERSTATE_URL= "/order/orderInfo/auth/getStatusList",
    CITY_URL = "/cmn/dict/findByParentId/",
    ADDUSER_URL="/user/patient/auth/save",
-   UPDATAUSER_USER="/user/patient/auth/update"
+   UPDATAUSER_USER="/user/patient/auth/update",
+   DELETEUSER_URL='/user/patient/auth/remove/'
 }
 // 提交订单
 export const reqSubmitOrder = (hoscode:string,scheduleId:string,patientId:number)=>request.post<any,SubmitOrder>(API.SUBMITORDER_URL+`/${hoscode}/${scheduleId}/${patientId}`)
@@ -49,3 +50,5 @@ export const reqAddOrUpdataUser = (data:AddOrUpdataUser)=>{
         return request.post(API.ADDUSER_URL, data)
     }
 }
+// 删除就诊人
+export const reqRemoveUser = (id:number)=>request.delete(API.DELETEUSER_URL+id);
