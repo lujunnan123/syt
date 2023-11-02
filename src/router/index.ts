@@ -7,7 +7,10 @@ export default createRouter({
     routes: [
         {
             path: '/home',
-            component: () => import('@/pages/home/index.vue')
+            component: () => import('@/pages/home/index.vue'),
+            meta:{
+                title:'首页'
+            }
         },
         {
             path: '/hospital',
@@ -16,31 +19,52 @@ export default createRouter({
                 {
                     path: 'close',
                     component: () => import('@/pages/hospital/close/index.vue'),
+                    meta:{
+                        title:'停诊信息'
+                    }
                 },
                 {
                     path: 'detail',
                     component: () => import('@/pages/hospital/detail/index.vue'),
+                    meta:{
+                        title:'详情'
+                    }
                 },
                 {
                     path: 'notice',
                     component: () => import('@/pages/hospital/notice/index.vue'),
+                    meta:{
+                        title:'挂号注意'
+                    }
                 },
                 {
                     path: 'register',
                     component: () => import('@/pages/hospital/register/index.vue'),
+                    meta:{
+                        title:'用户注册'
+                    }
                    
                 },
                 {
                     path: 'search',
                     component: () => import('@/pages/hospital/search/index.vue'),
+                    meta:{
+                        title:'搜索'
+                    }
                 },
                 {
                     path:'register_step1',
-                    component:() => import('@/pages/hospital/register/register_step1.vue')
+                    component:() => import('@/pages/hospital/register/register_step1.vue'),
+                    meta:{
+                        title:'注册一步'
+                    }
                 },
                 {
                     path:'register_step2',
-                    component:() => import('@/pages/hospital/register/register_step2.vue')
+                    component:() => import('@/pages/hospital/register/register_step2.vue'),
+                    meta:{
+                        title:'注册二步'
+                    }
                 }
             ]
         },
@@ -55,23 +79,38 @@ export default createRouter({
             children:[
                 {
                     path:'certification',
-                    component:()=>import('@/pages/user/certification/index.vue')
+                    component:()=>import('@/pages/user/certification/index.vue'),
+                    meta:{
+                        title:'实名认证'
+                    }
                 },
                 {
                     path:'feedback',
-                    component:()=>import('@/pages/user/feedback/index.vue')
+                    component:()=>import('@/pages/user/feedback/index.vue'),
+                    meta:{
+                        title:'意见反馈'
+                    }
                 },
                 {
                     path:'order',
-                    component:()=>import('@/pages/user/order/index.vue')
+                    component:()=>import('@/pages/user/order/index.vue'),
+                    meta:{
+                        title:'挂号订单'
+                    }
                 },
                 {
                     path:'patient',
-                    component:()=>import('@/pages/user/patient/index.vue')
+                    component:()=>import('@/pages/user/patient/index.vue'),
+                    meta:{
+                        title:'就诊人管理'
+                    }
                 },
                 {
                     path:'profile',
-                    component:()=>import('@/pages/user/profile/index.vue')
+                    component:()=>import('@/pages/user/profile/index.vue'),
+                    meta:{
+                        title:'账号信息'
+                    }
                 }
             ]
         }

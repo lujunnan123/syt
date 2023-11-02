@@ -20,6 +20,8 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import pinia from '@/store'
 // 利用createApp方法创建应用实例，且将应用实例挂载到挂载点上
 const app = createApp(App)
+// 引入路由鉴权的文件
+import './permission'
 // 注册全局组件
 app.component('HospitalTop',HospitalTop)
 app.component('HospitalBottom',HospitalBottom)
